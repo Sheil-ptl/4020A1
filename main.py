@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.decomposition import PCA
-from sklearn.manifold import MDS
 import matplotlib.pyplot as plt
 
 #load the data

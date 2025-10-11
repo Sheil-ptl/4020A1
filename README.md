@@ -2,7 +2,7 @@
 
 z = (x - mean) / std
 
-By organizing our values so that they have a mean of 0 and a standard deviation of 1, we've standardized our values, making them equally valued for the next steps.
+By organizing our values so that they have a mean of 0 and a standard deviation of 1, we've standardized our values, making them equally impactful for the next steps.
 
 2. Two distance summary tables (Euclidean and Manhattan): min, max, mean, median distances
 
