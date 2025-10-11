@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.decomposition import PCA
+from sklearn.manifold import MDS
 import matplotlib.pyplot as plt
 
 #load the data
@@ -57,7 +58,7 @@ print("minimum:", round(np.min(man_dist), 6))
 print("maximum:", round(np.max(man_dist), 6))
 print("mean:", round(np.mean(man_dist), 6))
 print("median:", round(np.median(man_dist), 6))
-
+print()
 
 #step 3: PCA (PC1, PC2, PC3)
 #we can simplify this by using scikit learn
@@ -69,18 +70,25 @@ k = 3
 pca = PCA(n_components=k)
 
 #fit and transform the data for printing
-pca_rough = pca.fit(data)
 pca_result = pca.fit_transform(data)
 
 #create a table of variance explaining the components(3), the variance, and percentage of variance
 explained_variance = pca.explained_variance_
 explained_variance_ratio = pca.explained_variance_ratio_
-components = pca.components_
 
 
-print()
+#reformat all
 print("PCA Component Table:")
 print("Component\tVariance\t% of Variance")
 for i in range(k):
-    print(f"PC{i+1}\t\t\t{round(explained_variance[i], 6)}\t{round(explained_variance_ratio[i]*100, 6)}%")
+    print(f"PC{i+1}\t\t{round(explained_variance[i], 6)}\t{round(explained_variance_ratio[i]*100, 6)}%")
 print()
+
+
+#step 4: MDS 3D
+
+
+#compute MDS with 3 components, precomputed(we already have the euclidean distance matrix), added my ID as state for reproducibility
+mds = MDS(n_components=3, dissimilarity="precomputed", random_state=1276126)
+mds_result = mds.fit_transform(euclid_matrix)
+
