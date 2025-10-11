@@ -14,7 +14,7 @@ data = data.astype(float)
 #standardize the data using z scores (z = (x - mean) / std)
 data = (data - np.mean(data, axis = 0)) / np.std(data, axis = 0)
 
-#step 2: compute pairwise distances(euclidean and manhattan)
+#step 2: compute euclidean and manhattan distances
 
 #find number of samples for matrix size
 n = data.shape[0]
@@ -47,17 +47,16 @@ for i in range(n):
 
 #print results, round
 print("Euclidean Distance Values:")
-print("minimum:", round(np.min(euc_dist), 6))
-print("maximum:", round(np.max(euc_dist), 6))
-print("mean:", round(np.mean(euc_dist), 6))
-print("median:", round(np.median(euc_dist), 6))
-print()
+print("minimum:", round(np.min(euc_dist), 3))
+print("maximum:", round(np.max(euc_dist), 3))
+print("mean:", round(np.mean(euc_dist), 3))
+print("median:", round(np.median(euc_dist), 3))
 print()
 print("Manhattan Distance Values:")
-print("minimum:", round(np.min(man_dist), 6))
-print("maximum:", round(np.max(man_dist), 6))
-print("mean:", round(np.mean(man_dist), 6))
-print("median:", round(np.median(man_dist), 6))
+print("minimum:", round(np.min(man_dist), 3))
+print("maximum:", round(np.max(man_dist), 3))
+print("mean:", round(np.mean(man_dist), 3))
+print("median:", round(np.median(man_dist), 3))
 print()
 
 #step 3: PCA (PC1, PC2, PC3)
@@ -76,19 +75,38 @@ pca_result = pca.fit_transform(data)
 explained_variance = pca.explained_variance_
 explained_variance_ratio = pca.explained_variance_ratio_
 
-
 #reformat all
 print("PCA Component Table:")
 print("Component\tVariance\t% of Variance")
 for i in range(k):
     print(f"PC{i+1}\t\t{round(explained_variance[i], 6)}\t{round(explained_variance_ratio[i]*100, 6)}%")
 print()
+#reformat above
+
+#scatter plot of the first 3 components
+#source: https://www.geeksforgeeks.org/python/3d-scatter-plotting-in-python-using-matplotlib/
+
+#seperating our components
+pc1 = pca_result[:, 0]
+pc2 = pca_result[:, 1]
+pc3 = pca_result[:, 2]
+
+#form the plot, choosing green x's(because I like the colour green)
+scatterPCA = plt.figure()
+ax = scatterPCA.add_subplot(111, projection='3d')
+ax.scatter(pc1, pc2, pc3, color='green', marker='x')
+
+#labels for the plot
+ax.set_title('PCA Scatter Plot')
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC2')
+ax.set_zlabel('PC3')
+
+plt.show()
+
 
 
 #step 4: MDS 3D
-
-
-#compute MDS with 3 components, precomputed(we already have the euclidean distance matrix), added my ID as state for reproducibility
-mds = MDS(n_components=3, dissimilarity="precomputed", random_state=1276126)
-mds_result = mds.fit_transform(euclid_matrix)
-
+#we can't use scikit learn, due to the MDS implementation only supporting metric/non-metric MDS
+#compute Classical MDS
+    
