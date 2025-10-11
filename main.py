@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 
 #load the data
 data = np.loadtxt('CIS4020F25DataSet.csv', delimiter=',', dtype=str)
@@ -58,5 +60,27 @@ print("median:", round(np.median(man_dist), 6))
 
 
 #step 3: PCA (PC1, PC2, PC3)
+#we can simplify this by using scikit learn
+
+#k val for PC1, PC2, PC3
+k = 3
+
+#compute PCA with k components
+pca = PCA(n_components=k)
+
+#fit and transform the data for printing
+pca_rough = pca.fit(data)
+pca_result = pca.fit_transform(data)
+
+#create a table of variance explaining the components(3), the variance, and percentage of variance
+explained_variance = pca.explained_variance_
+explained_variance_ratio = pca.explained_variance_ratio_
+components = pca.components_
 
 
+print()
+print("PCA Component Table:")
+print("Component\tVariance\t% of Variance")
+for i in range(k):
+    print(f"PC{i+1}\t\t\t{round(explained_variance[i], 6)}\t{round(explained_variance_ratio[i]*100, 6)}%")
+print()
