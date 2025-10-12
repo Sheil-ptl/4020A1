@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plot
 
 #load the data
 data = np.loadtxt("CIS4020F25DataSet.csv", delimiter=",", dtype=str)
@@ -10,7 +10,7 @@ data = np.loadtxt("CIS4020F25DataSet.csv", delimiter=",", dtype=str)
 data = data[1:, 1:]
 data = data.astype(float)
 
-#standardize the data using z scores (z = (x - mean) / std)
+#step 1:standardize the data using z scores (z = (x - mean) / std)
 data = (data - np.mean(data, axis = 0)) / np.std(data, axis = 0)
 
 #step 2: compute euclidean and manhattan distances
@@ -92,7 +92,7 @@ pc2 = pca_result[:, 1]
 pc3 = pca_result[:, 2]
 
 #form the plot, choosing green x's(because I like the colour green)
-scatterPCA = plt.figure()
+scatterPCA = plot.figure()
 ax = scatterPCA.add_subplot(111, projection="3d")
 ax.scatter(pc1, pc2, pc3, color="green", marker="x")
 
@@ -102,7 +102,7 @@ ax.set_xlabel("PC1")
 ax.set_ylabel("PC2")
 ax.set_zlabel("PC3")
 
-plt.show()
+plot.show()
 
 
 #step 4: MDS 3D
@@ -148,7 +148,7 @@ mds2 = mds_result[:, 1]
 mds3 = mds_result[:, 2]
 
 #form the plot
-scatterMDS = plt.figure()
+scatterMDS = plot.figure()
 ax = scatterMDS.add_subplot(111, projection="3d")
 ax.scatter(mds1, mds2, mds3, color="green", marker="x")
 
@@ -159,4 +159,4 @@ ax.set_xlabel("MDS1")
 ax.set_ylabel("MDS2")
 ax.set_zlabel("MDS3")
 
-plt.show()
+plot.show()
