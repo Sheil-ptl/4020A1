@@ -3,7 +3,7 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
 #load the data
-data = np.loadtxt('CIS4020F25DataSet.csv', delimiter=',', dtype=str)
+data = np.loadtxt("CIS4020F25DataSet.csv", delimiter=",", dtype=str)
 
 #remove the identifiers, the ID's and convert the values to floats
 #source: https://www.w3schools.com/python/numpy/numpy_array_slicing.asp (slicing arrays)
@@ -45,13 +45,13 @@ for i in range(n):
             
 
 #print results, round
-print("Euclidean Distance Values:")
+print("Euclidean Distance Summary:")
 print("minimum:", round(np.min(euc_dist), 3))
 print("maximum:", round(np.max(euc_dist), 3))
 print("mean:", round(np.mean(euc_dist), 3))
 print("median:", round(np.median(euc_dist), 3))
 print()
-print("Manhattan Distance Values:")
+print("Manhattan Distance Summary:")
 print("minimum:", round(np.min(man_dist), 3))
 print("maximum:", round(np.max(man_dist), 3))
 print("mean:", round(np.mean(man_dist), 3))
@@ -74,13 +74,14 @@ pca_result = pca.fit_transform(data)
 explained_variance = pca.explained_variance_
 explained_variance_ratio = pca.explained_variance_ratio_
 
-#reformat all
-print("PCA Component Table:")
-print("Component\tVariance\t% of Variance")
-for i in range(k):
-    print(f"PC{i+1}\t\t{round(explained_variance[i], 6)}\t{round(explained_variance_ratio[i]*100, 6)}%")
+#print the table to 3 decimal places
+print("PCA Table of Variance:")
+print("PC#        Variance        % of Variance")
+print("PC1       ", round(explained_variance[0], 3), "         ", round(explained_variance_ratio[0] * 100, 3))
+print("PC2       ", round(explained_variance[1], 3), "         ", round(explained_variance_ratio[1] * 100, 3))
+print("PC3       ", round(explained_variance[2], 3), "         ", round(explained_variance_ratio[2] * 100, 3))
 print()
-#reformat above
+
 
 #scatter plot of the first 3 components
 #source: https://www.geeksforgeeks.org/python/3d-scatter-plotting-in-python-using-matplotlib/
@@ -92,20 +93,68 @@ pc3 = pca_result[:, 2]
 
 #form the plot, choosing green x's(because I like the colour green)
 scatterPCA = plt.figure()
-ax = scatterPCA.add_subplot(111, projection='3d')
-ax.scatter(pc1, pc2, pc3, color='green', marker='x')
+ax = scatterPCA.add_subplot(111, projection="3d")
+ax.scatter(pc1, pc2, pc3, color="green", marker="x")
 
 #labels for the plot
-ax.set_title('PCA Scatter Plot')
-ax.set_xlabel('PC1')
-ax.set_ylabel('PC2')
-ax.set_zlabel('PC3')
+ax.set_title("PCA Scatter Plot")
+ax.set_xlabel("PC1")
+ax.set_ylabel("PC2")
+ax.set_zlabel("PC3")
 
 plt.show()
 
 
-
 #step 4: MDS 3D
 #we can't use scikit learn, due to the MDS implementation only supporting metric/non-metric MDS
-#compute Classical MDS
+#compute Classical MDS (from formula in slides)
     
+#square the euclidean distance matrix
+d_square = euclid_matrix ** 2
+
+#Calculate C matrix (I - 1/n * J)
+n = d_square.shape[0]
+i = np.eye(n)
+j = np.ones((n, n))
+c = i - (1/n) * j
+
+#Calculate B matrix (-1/2 * C * D^2 * C)
+b = -0.5 * c @ d_square @ c
+
+#Eigen decomposition of B
+#source: https://numpy.org/doc/2.3/reference/generated/numpy.linalg.eigh.html because i spent a horrible time learning the difference between eig and eigh functions(thank you numpy)
+eigenvalues, eigenvectors = np.linalg.eigh(b)
+
+#Sort eigenvalues and eigenvectors in descending order for top 3
+#we can use argsort to find our indices, then flip and slice for our top 3 eigenvalues and eigenvectors
+sort_values = np.argsort(eigenvalues)
+flip_values = np.flip(sort_values)
+
+#get the top 3
+top_values = flip_values[:k]
+top3_eigenvalues = eigenvalues[top_values]
+top3_eigenvectors = eigenvectors[:, top_values]
+
+#Compute MDS result (X = E_3 * sqrt(^_3))
+mds_result = top3_eigenvectors @ np.diag(np.sqrt(top3_eigenvalues))
+
+#scatter plot of the top 3 eigen pairs
+
+#seperating our components
+mds1 = mds_result[:, 0]
+mds2 = mds_result[:, 1]
+mds3 = mds_result[:, 2]
+
+#form the plot
+scatterMDS = plt.figure()
+ax = scatterMDS.add_subplot(111, projection="3d")
+ax.scatter(mds1, mds2, mds3, color="green", marker="x")
+
+
+#labels for the plot
+ax.set_title("Classic MDS Scatter Plot")
+ax.set_xlabel("MDS1")
+ax.set_ylabel("MDS2")
+ax.set_zlabel("MDS3")
+
+plt.show()
