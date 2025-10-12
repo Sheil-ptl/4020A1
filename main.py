@@ -86,7 +86,7 @@ print()
 #scatter plot of the first 3 components
 #source: https://www.geeksforgeeks.org/python/3d-scatter-plotting-in-python-using-matplotlib/
 
-#seperating our components
+#seperating our components by column
 pc1 = pca_result[:, 0]
 pc2 = pca_result[:, 1]
 pc3 = pca_result[:, 2]
@@ -130,8 +130,10 @@ eigenvalues, eigenvectors = np.linalg.eigh(b)
 sort_values = np.argsort(eigenvalues)
 flip_values = np.flip(sort_values)
 
-#get the top 3
+#take the top 3
 top_values = flip_values[:k]
+
+#get our corresponding eigenvalues and eigenvectors
 top3_eigenvalues = eigenvalues[top_values]
 top3_eigenvectors = eigenvectors[:, top_values]
 

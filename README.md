@@ -26,7 +26,11 @@ PC1        8.966           89.215
 PC2        0.171           1.699
 PC3        0.153           1.523
 
+Plot in PDF
+
 4. MDS: a 3D scatter plot produced using Classical MDS on the Euclidean distance matrix
+
+Plot in PDF
 
 5. In 3–5 sentences, argue which method (PCA vs. MDS) provided more insight and why.
 
